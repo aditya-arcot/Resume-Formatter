@@ -1,3 +1,4 @@
 improve template
 improve writing
-automate parsing to .tex file
+automatic generation of .tex and .pdf
+ - Python library latexmk
