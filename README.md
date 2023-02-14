@@ -60,6 +60,7 @@ Institution1
 Dates
 Degree
 GPA
+
 Institution2
 ...
 ```
@@ -86,6 +87,7 @@ Dates
 Details1
 Details2
 ...
+
 -Title2
 ...
 ```
@@ -99,10 +101,7 @@ Keywords
 Details1
 Details2
 ...
+
 -Project2
 ...
 ```
-
-
-
-
