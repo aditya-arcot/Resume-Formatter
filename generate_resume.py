@@ -15,10 +15,12 @@ def read_input(args):
         print('file does not exist')
         return
 
+    path = os.path.dirname(os.path.realpath(infile))
+
     with open(infile, 'r', encoding='utf8') as f:
         lines = f.readlines()
 
-    return lines
+    return lines, path
 
 
 special = ['&', '%', '$', '#', '_', '{', '}']
@@ -133,11 +135,13 @@ def write_tex(st):
 
 
 def main():
-    lines = read_input(sys.argv)
+    lines, path = read_input(sys.argv)
     out = parse_input(lines)
     write_tex(out)
     os.system('latexmk -pdf -pv resume.tex')
     os.system('latexmk -c')
+    pdf_path = os.path.join(path, 'resume.pdf')
+    os.system(f'mv resume.pdf {pdf_path}')
     os.system('rm resume.tex')
 
 main()
