@@ -1,38 +1,44 @@
+'''Generate resume PDF from text file using Latexmk and custom cls file'''
+
 import sys
 import os
 
-# following characters are not supported - ~, ^, \
+SLASH = '\\'
 
-slash = '\\'
+def read_input():
+    '''read resume info from text file'''
 
-def read_input(args):
     if len(sys.argv) < 2:
         print('usage: python3 generate_resume.py text_file')
-        return
+        sys.exit(0)
 
     infile = sys.argv[1]
     if not os.path.isfile(infile):
         print('file does not exist')
-        return
+        sys.exit(0)
 
     path = os.path.dirname(os.path.realpath(infile))
 
-    with open(infile, 'r', encoding='utf8') as f:
-        lines = f.readlines()
+    with open(infile, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
 
     return lines, path
 
 
 special = ['&', '%', '$', '#', '_', '{', '}']
-def replaceSpecial(st):
+def replace_special(line):
+    '''add backslash to TeX special characters'''
+
     for i in special:
-        st = st.replace(i, slash + i)
-    return st
+        line = line.replace(i, SLASH + i)
+    return line
 
 
 def parse_input(lines):
-    out = slash + 'documentclass{resume}'
-    out += slash + 'begin{document}'
+    '''extract 1 section at a time for TeX formatting'''
+
+    out = SLASH + 'documentclass{resume}'
+    out += SLASH + 'begin{document}'
     while lines:
         curr = lines.pop(0).strip()
         if not curr.startswith('--'): # skip until next section start
@@ -41,101 +47,111 @@ def parse_input(lines):
         section = ''.join(curr.split('--')).strip()
         details = []
 
-        curr = replaceSpecial(lines.pop(0).strip())
+        curr = replace_special(lines.pop(0).strip())
         while curr != '====': # until end of section
             if curr: # omit blank lines
                 details.append(curr)
-            curr = replaceSpecial(lines.pop(0).strip())
+            curr = replace_special(lines.pop(0).strip())
 
-        out += formatInfo(section, details)
+        out += format_info(section, details)
 
-    return out + slash + 'end{document}'
-
-
-def checkNumFields(section, lst, n, mode='s'):
-    if not len(lst) == n:
-        raise Exception(f'{section}' + 'section' if mode =='s' else 'entries' + 'must have {n} detail(s)')
+    return out + SLASH + 'end{document}'
 
 
-def formatArgs(details):
-    st = ''
+def check_num_fields(section, lst, num, mode='s'):
+    '''check if incorrect number of info fields for a section / entry'''
+
+    if not len(lst) == num:
+        msg = f'{section}' + 'section' if mode =='s' else 'entries' + 'must have {n} detail(s)'
+        raise Exception(msg)
+
+
+def format_args(details):
+    '''add open and close brackets to args and join together'''
+
+    out = ''
     for i in details:
-        st += '{' + i + '}'
-    return st
+        out += '{' + i + '}'
+    return out
 
 
-def sectionName(section):
-    return slash + f'section{{{section}}}'
+def section_name(section):
+    '''add slash and brackets to section name'''
+
+    return SLASH + f'section{{{section}}}'
 
 
-personalInfoEntry = slash + 'personalInfoEntry'
-textEntry = slash + 'textEntry'
-technicalEntry = slash + 'technicalEntry'
-educationEntry = slash + 'educationEntry'
-experienceEntry = slash + 'experienceEntry'
-projectEntry = slash + 'projectEntry'
-bulletedDetails = slash + 'bulletedDetails'
-spacer = slash + 'spacer'
+PERSONAL_INFO_ENTRY = SLASH + 'personalInfoEntry'
+TEXT_ENTRY = SLASH + 'textEntry'
+TECHNICAL_ENTRY = SLASH + 'technicalEntry'
+EDUCATION_ENTRY = SLASH + 'educationEntry'
+EXPERIENCE_ENTRY = SLASH + 'experienceEntry'
+PROJECT_ENTRY = SLASH + 'projectEntry'
+BULLETED_DETAILS = SLASH + 'bulletedDetails'
+SPACER = SLASH + 'spacer'
 
+def format_info(section, details):
+    '''create TeX formatted section with corresponding details'''
 
-def formatInfo(section, details):
     first_entry = True
 
     if section == 'Personal':
-        checkNumFields(section, details, 4)
-        return personalInfoEntry + formatArgs(details)
+        check_num_fields(section, details, 4)
+        return PERSONAL_INFO_ENTRY + format_args(details)
 
     if section in ('Objective', 'Coursework'):
-        checkNumFields(section, details, 1)
-        return sectionName(section) + textEntry + formatArgs(details)
+        check_num_fields(section, details, 1)
+        return section_name(section) + TEXT_ENTRY + format_args(details)
 
     if section == 'Technical Skills':
-        out = sectionName(section) + textEntry + '{'
+        out = section_name(section) + TEXT_ENTRY + '{'
         for i in details:
             split = i.split('-')
-            type = split[0].strip()
+            skill_type = split[0].strip()
             skills = split[1].strip()
-            out += technicalEntry + formatArgs([type,skills])
+            out += TECHNICAL_ENTRY + format_args([skill_type, skills])
         return out + '}'
 
     if section == 'Education':
-        l = 4 # num details per entry
-        out = sectionName(section)
-        for i in range(len(details)//l):
-            entry_details = details[l*i:(i+1)*l]
+        num = 4 # num details per entry
+        out = section_name(section)
+        for i in range(len(details)//num):
+            entry_details = details[num*i:(i+1)*num]
             if not first_entry:
-                out += spacer
-            out += educationEntry + formatArgs(entry_details)
+                out += SPACER
+            out += EDUCATION_ENTRY + format_args(entry_details)
             first_entry = False
         return out
 
     if section in ('Experience', 'Projects'):
-        out = sectionName(section)
+        out = section_name(section)
         while details:
             i = details.pop(0)
             if i.startswith('-'):
                 if not first_entry:
-                    out += spacer
+                    out += SPACER
                 title = ''.join(i.split('-')).strip()
                 if section == 'Experience':
-                    out += experienceEntry + formatArgs([title, details.pop(0), details.pop(0)])
+                    out += EXPERIENCE_ENTRY + format_args([title, details.pop(0), details.pop(0)])
                 else:
-                    out += projectEntry + formatArgs([title, details.pop(0)])
+                    out += PROJECT_ENTRY + format_args([title, details.pop(0)])
                 first_entry = False
                 continue
-            out += bulletedDetails + formatArgs([i])
+            out += BULLETED_DETAILS + format_args([i])
         return out
 
     raise Exception(f'unknown section - {section}')
 
 
-def write_tex(st):
-    with open('resume.tex', 'w') as f:
-        f.write(st)
+def write_tex(out):
+    '''write output string to .tex file'''
+    with open('resume.tex', 'w', encoding='utf-8') as file:
+        file.write(out)
 
 
 def main():
-    lines, path = read_input(sys.argv)
+    '''driver function'''
+    lines, path = read_input()
     out = parse_input(lines)
     write_tex(out)
     os.system('latexmk -pdf -pv resume.tex')
@@ -143,5 +159,6 @@ def main():
     pdf_path = os.path.join(path, 'resume.pdf')
     os.system(f'mv resume.pdf {pdf_path}')
     os.system('rm resume.tex')
+
 
 main()
