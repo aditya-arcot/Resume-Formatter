@@ -32,7 +32,7 @@ For example, see the following Objective section:
 Software engineer looking to continue his career at a dynamic organization
 ====
 ```
-White space is always ignored and can be used to improve readability    
+Empty lines are always ignored and can be used to improve readability    
 
 
 ## Information
