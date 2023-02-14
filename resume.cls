@@ -9,6 +9,7 @@
 \RequirePackage{geometry}
 \RequirePackage{titlesec}
 \RequirePackage{enumitem}
+\RequirePackage[T1]{fontenc}
 \RequirePackage[hidelinks]{hyperref}
 
 
@@ -38,8 +39,8 @@
 \newcommand{\personalInfoEntry}[4]
 {\begin{center}
 	\textbf{\Huge #1} \\
-	\small #2 $|$ 
-	\href{mailto:#3}{\underline{#3}} $|$ 
+	\small #2 $|$
+	\href{mailto:#3}{\underline{#3}} $|$
 	\href{https://#4}{\underline{#4}}
 \end{center}}
 
@@ -58,7 +59,7 @@
 \newcommand{\educationEntry}[4]
 {\textEntry{
 	\textbf{#1} \hfill #2\\
-	\hspace{5pt}\textit{#3} \hfill #4
+	\hspace{0.3cm}\textit{#3} \hfill #4
 }}
 
 \newcommand{\technicalEntry}[2]
