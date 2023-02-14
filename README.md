@@ -35,6 +35,7 @@ Software engineer looking to continue his career at a dynamic organization
 
 
 ## Information
+Following characters are not supported - ~, ^, \
 The information listed for each section is required unless otherwise specified
 
 ### Personal
