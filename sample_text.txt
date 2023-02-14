@@ -1,0 +1,65 @@
+--Personal
+Name
+Phone
+Email
+Website
+====
+
+
+--Objective
+Statement
+====
+
+
+--Education
+Institution1
+Dates
+Degree
+GPA
+
+Institution2
+Dates
+Degree
+GPA
+====
+
+
+--Coursework
+Course1, Course2, ...
+====
+
+
+--Technical Skills
+Category1 - Skill1, Skill2, ...
+Category2 - Skill1, Skill2
+====
+
+
+--Experience
+-Title1
+Company
+Dates
+Details1
+Details2
+...
+
+-Title2
+Company
+Dates
+Details1
+Details2
+====
+
+
+--Projects
+-Project1
+Keyword1, Keyword2, ...
+Details1
+Details2
+...
+
+-Project2
+Keyword1, Keyword2
+Details1
+Details2
+====
