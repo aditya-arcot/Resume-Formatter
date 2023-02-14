@@ -23,6 +23,8 @@ This tool is configured to work on information provided for the following sectio
 - Experience
 - Projects
 
+See `sample_text.txt` and the corresponding generated `sample_resume.pdf` 
+
 
 ## Section formatting
 Each section must begin with -- followed by the section name and end with ====    
