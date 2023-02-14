@@ -13,7 +13,7 @@ Organize info, format sections and headings as shown below
 Run `python3 generate_resume.py resume_text_file` to generate PDF of resume 
 
 
-## Resume text file
+## Overview
 This tool is configured to work on information provided for the following sections
 - Personal
 - Objective
@@ -25,13 +25,14 @@ This tool is configured to work on information provided for the following sectio
 
 
 ## Section formatting
-Each section must begin with -- followed by the section name and end with ====
+Each section must begin with -- followed by the section name and end with ====    
 For example, see the following Objective section: 
 ```
 --Objective
 Software engineer looking to continue his career at a dynamic organization
 ====
 ```
+White space is always ignored and can be used to improve readability    
 
 
 ## Information
