@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{my_resume}[2023/02/13 A Pastel CV Template with some infographics]
+\ProvidesClass{my_resume}[2023/02/13 Custom resume formatting / commands]
 \LoadClass{article}
 
 % -------------------------------
