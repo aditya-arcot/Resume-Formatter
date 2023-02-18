@@ -157,7 +157,7 @@ def main():
     os.system('latexmk -pdf -pv resume.tex')
     os.system('latexmk -c')
     pdf_path = os.path.join(path, 'resume.pdf')
-    os.system(f'mv resume.pdf {pdf_path}')
+    os.system(f'mv resume.pdf \'{pdf_path}\'')
     os.system('rm resume.tex')
 
 
